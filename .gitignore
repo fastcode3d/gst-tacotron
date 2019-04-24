@@ -9,4 +9,7 @@ logs*
 database
 *.zip
 .idea/*
+src/
+vec_bert.txt
+voc_bert.txt
 

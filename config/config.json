@@ -1,0 +1,10 @@
+{
+  "gpu_frac": 0.35,
+  "work_dir": "",
+  "MAX_SEN_LEN": 100,
+  "add_voice": 1.0,
+  "checkpoint_tacotron_path": "taco_pretrained/tacotron_model.ckpt-33000",
+  "pb_tacotron_path": "model/model.pb",
+  "pb_wavenet_path": "model/wavenet.pth",
+  "checkpoint_wavenet_path": "/media/checkpoint_step000600000_ema.pth"
+}

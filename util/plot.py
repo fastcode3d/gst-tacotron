@@ -18,3 +18,17 @@ def plot_alignment(alignment, path, info=None):
   plt.ylabel('Encoder timestep')
   plt.tight_layout()
   plt.savefig(path, format='png')
+
+def plot_spectrogram(input, path=None, info=None):
+    # spectrogram = audio._denormalize(linear_output)
+    spectrogram = input
+    fig = plt.figure(figsize=(16, 10))
+    plt.imshow(spectrogram.T, aspect="auto", origin="lower")
+    plt.colorbar()
+    if info is not None:
+        plt.xlabel(info)
+    plt.tight_layout()
+    plt.close()
+    if path is not None:
+        plt.savefig(path)
+    return fig

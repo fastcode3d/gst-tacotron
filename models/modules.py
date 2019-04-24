@@ -1,6 +1,7 @@
 import tensorflow as tf
 from tensorflow.contrib.rnn import GRUCell
 from util.ops import shape_list
+import numpy as np
 
 
 def prenet(inputs, is_training, layer_sizes=[256, 128], scope=None):
@@ -12,7 +13,12 @@ def prenet(inputs, is_training, layer_sizes=[256, 128], scope=None):
       dense = tf.layers.dense(x, units=size, activation=tf.nn.relu, name='dense_%d' % (i+1))
       x = tf.layers.dropout(dense, rate=drop_rate, training=True, name='dropout_%d' % (i+1))
   return x
-
+def GuidedAttention(N, T, g=0.2):
+    W = np.zeros((N, T), dtype=np.float32)
+    for n in range(N):
+        for t in range(T):
+            W[n, t] = 1 - np.exp(-(t / float(T) - n / float(N)) ** 2 / (2 * g * g))
+    return W
 def reference_encoder(inputs, filters, kernel_size, strides, encoder_cell, is_training, scope='ref_encoder'):
   with tf.variable_scope(scope):
     ref_outputs = tf.expand_dims(inputs,axis=-1)
@@ -135,3 +141,35 @@ def conv2d(inputs, filters, kernel_size, strides, activation, is_training, scope
       conv2d_output = activation(conv2d_output)
     return conv2d_output
 
+class Postnet:
+    """Postnet that takes final decoder output and fine tunes it (using vision on past and future frames)
+    """
+
+    def __init__(self, is_training, hparams, activation=tf.nn.tanh, scope=None):
+        """
+        Args:
+            is_training: Boolean, determines if the model is training or in inference to control dropout
+            kernel_size: tuple or integer, The size of convolution kernels
+            channels: integer, number of convolutional kernels
+            activation: callable, postnet activation function for each convolutional layer
+            scope: Postnet scope.
+        """
+        super(Postnet, self).__init__()
+        self.is_training = is_training
+
+        self.kernel_size = hparams.postnet_kernel_size
+        self.channels = hparams.postnet_channels
+        self.activation = activation
+        self.scope = 'postnet_convolutions' if scope is None else scope
+        self.postnet_num_layers = hparams.postnet_num_layers
+        self.drop_rate = hparams.tacotron_dropout_rate
+
+    def __call__(self, inputs):
+        with tf.variable_scope(self.scope):
+            x = inputs
+            for i in range(self.postnet_num_layers - 1):
+                x = conv1d(x, self.kernel_size, self.channels, self.activation,
+                           self.is_training, 'conv_layer_{}_'.format(i + 1) + self.scope)
+            x = conv1d(x, self.kernel_size, self.channels, lambda _: _, self.is_training,
+                       'conv_layer_{}_'.format(5) + self.scope)
+        return x
