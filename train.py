@@ -165,7 +165,7 @@ def main():
     parser.add_argument('--restore_step', type=int, help='Global step to restore from checkpoint.')
     parser.add_argument('--summary_interval', type=int, default=100,
                         help='Steps between running summary ops.')
-    parser.add_argument('--checkpoint_interval', type=int, default=1000,
+    parser.add_argument('--checkpoint_interval', type=int, default=100,
                         help='Steps between writing checkpoints.')
     parser.add_argument('--slack_url', help='Slack webhook URL to get periodic reports.')
     parser.add_argument('--tf_log_level', type=int, default=1, help='Tensorflow C++ log level.')

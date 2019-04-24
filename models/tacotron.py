@@ -151,7 +151,7 @@ class Tacotron():
                 mel_outputs = decoder_output + projected_residual
 
             # Grab alignments from the final decoder state:
-            alignments = tf.transpose(final_decoder_state[0].alignment_history.stack(), [1, 2, 0])
+            alignments = tf.transpose(final_decoder_state[0].alignment_history.stack(), [1, 2, 0], name="alignments")
 
             self.inputs = inputs
             self.input_lengths = input_lengths

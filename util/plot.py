@@ -18,6 +18,7 @@ def plot_alignment(alignment, path, info=None):
   plt.ylabel('Encoder timestep')
   plt.tight_layout()
   plt.savefig(path, format='png')
+  plt.close()
 
 def plot_spectrogram(input, path=None, info=None):
     # spectrogram = audio._denormalize(linear_output)
@@ -28,7 +29,7 @@ def plot_spectrogram(input, path=None, info=None):
     if info is not None:
         plt.xlabel(info)
     plt.tight_layout()
-    plt.close()
     if path is not None:
         plt.savefig(path)
+    plt.close()
     return fig

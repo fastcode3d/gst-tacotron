@@ -12,4 +12,4 @@ database
 src/
 vec_bert.txt
 voc_bert.txt
-
+lpc/
