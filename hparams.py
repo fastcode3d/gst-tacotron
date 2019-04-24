@@ -19,17 +19,25 @@ hparams = tf.contrib.training.HParams(
 
   # Model:
   outputs_per_step=2,
-  embed_depth=256,
-  prenet_depths=[256, 128],
-  encoder_depth=256,
-  rnn_depth=256,
-
+  # embed_depth=256,
+  # prenet_depths=[256, 128],
+  # encoder_depth=256,
+  # rnn_depth=256,
   # Attention
-  attention_depth=256,
+  # attention_depth=256,
+
+  embed_depth=128,
+  prenet_depths=[128, 128],
+  encoder_depth=2,
+  rnn_depth=2,
+  # Attention
+  attention_depth=2,
+
 
 
   # Training:
-  batch_size=32,
+  # batch_size=32,
+  batch_size=2,
   adam_beta1=0.9,
   adam_beta2=0.999,
   initial_learning_rate=0.002,

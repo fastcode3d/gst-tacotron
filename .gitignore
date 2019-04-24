@@ -8,4 +8,5 @@ training*/
 logs*
 database
 *.zip
+.idea/*
 
