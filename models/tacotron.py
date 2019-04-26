@@ -15,7 +15,7 @@ class Tacotron():
         self._hparams = hparams
 
     def initialize(self, inputs, input_lengths, mel_targets=None, stop_token_targets=None, is_training=False,
-                   global_step=None,reference_mel=None):
+                   global_step=None, reference_mel=None):
         '''Initializes the model for inference.
 
         Sets "mel_outputs", "linear_outputs", and "alignments" fields.
@@ -189,14 +189,14 @@ class Tacotron():
     def add_loss(self):
         '''Adds loss to the model. Sets "loss" field. initialize must have been called.'''
         with tf.variable_scope('loss') as scope:
-            hp = self._hparams
-            N = self._hparams.max_text_length
-            T = hp.max_iters
-            A = tf.pad(self.alignments, [(0, 0), (0, N), (0, T)], mode="CONSTANT", constant_values=-1.)[:, :N, :T]
-            gts = tf.convert_to_tensor(GuidedAttention(N, T))
-            attention_masks = tf.to_float(tf.not_equal(A, -1))
-            self.attention_loss = tf.reduce_sum(tf.abs(A * gts) * attention_masks)
-            self.attention_loss /= tf.reduce_sum(attention_masks)
+            # hp = self._hparams
+            # N = self._hparams.max_text_length
+            # T = hp.max_iters
+            # A = tf.pad(self.alignments, [(0, 0), (0, N), (0, T)], mode="CONSTANT", constant_values=-1.)[:, :N, :T]
+            # gts = tf.convert_to_tensor(GuidedAttention(N, T))
+            # attention_masks = tf.to_float(tf.not_equal(A, -1))
+            # self.attention_loss = tf.reduce_sum(tf.abs(A * gts) * attention_masks)
+            # self.attention_loss /= tf.reduce_sum(attention_masks)
             self.mel_loss_before = tf.reduce_mean(tf.abs(self.mel_targets - self.decoder_output))
             self.mel_loss = tf.reduce_mean(tf.abs(self.mel_targets - self.mel_outputs))
             # self.mel_loss_before = tf.losses.mean_squared_error(self.mel_targets, self.decoder_output)
@@ -220,7 +220,8 @@ class Tacotron():
             self.regularization_loss = tf.add_n([tf.nn.l2_loss(v) for v in all_vars
                                                  if not ('bias' in v.name or 'Bias' in v.name)]) * reg_weight
 
-            self.loss = self.mel_loss + self.mel_loss_before  + self.regularization_loss + self.attention_loss
+            # self.loss = self.mel_loss + self.mel_loss_before  + self.regularization_loss + self.attention_loss
+            self.loss = self.mel_loss + self.mel_loss_before + self.regularization_loss + self.attention_loss
 
     def add_optimizer(self, global_step):
         '''Adds optimizer. Sets "gradients" and "optimize" fields. add_loss must have been called.
