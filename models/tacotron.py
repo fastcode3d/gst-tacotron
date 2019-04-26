@@ -221,7 +221,7 @@ class Tacotron():
                                                  if not ('bias' in v.name or 'Bias' in v.name)]) * reg_weight
 
             # self.loss = self.mel_loss + self.mel_loss_before  + self.regularization_loss + self.attention_loss
-            self.loss = self.mel_loss + self.mel_loss_before + self.regularization_loss + self.attention_loss
+            self.loss = self.mel_loss + self.mel_loss_before + self.regularization_loss
 
     def add_optimizer(self, global_step):
         '''Adds optimizer. Sets "gradients" and "optimize" fields. add_loss must have been called.
